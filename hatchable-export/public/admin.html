@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1f3a">
+<link rel="stylesheet" href="/theme.css">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/workspace.css">
+<title>Admin Dashboard — DisasterGuard</title>
+</head>
+<body class="admin-page">
+<div class="admin-layout">
+  <aside class="admin-sidebar" id="adminSidebar">
+    <a class="admin-brand" href="/admin.html">
+      <span class="brand-mark">✚</span>
+      <span>Disaster<span class="brand-light">Guard</span><small>RESPONSE ADMIN</small></span>
+    </a>
+    <div class="sidebar-caption">WORKSPACE</div>
+    <nav class="admin-nav" aria-label="Admin navigation">
+      <a class="active" href="#overview" data-nav><span class="nav-icon">▦</span>Dashboard</a>
+      <a href="#requests" data-nav><span class="nav-icon">⌁</span>Emergency Requests<span class="nav-count" id="sidebarRequestCount">—</span></a>
+      <a href="#volunteers" data-nav><span class="nav-icon">♙</span>Volunteer Verification</a>
+      <a href="#reports" data-nav><span class="nav-icon">▥</span>Reports &amp; Analytics</a>
+      <a href="#permissions" data-nav id="permissionsNav" hidden><span class="nav-icon">♙</span>User &amp; Permissions</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-status"><span class="sidebar-status-dot"></span><div><b>Admin workspace</b><small>Protected session</small></div></div>
+      <a class="sidebar-home" href="/">↗ View public website</a>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <button class="sidebar-toggle" id="adminMenuToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <div class="topbar-title"><span class="eyebrow muted">DISASTERGUARD / ADMINISTRATION</span><strong>Operations dashboard</strong></div>
+      <div class="top-actions"><span class="status-pill"><i></i> Protected admin data</span><button class="text-button" id="reloadAdmin">Refresh data ↻</button></div>
+    </header>
+
+    <main class="workspace admin-workspace">
+      <section id="overview" class="admin-overview">
+        <div class="workspace-heading">
+          <div><div class="eyebrow muted">OPERATIONS OVERVIEW</div><h1>Admin dashboard</h1><p>Monitor emergency requests, track their status, and review volunteer verification.</p></div>
+          <span class="account-chip"><span class="account-dot"></span> Administrator workspace</span>
+        </div>
+        <div class="workspace-notice"><b>Access controlled</b><span>This dashboard displays data only for an authorized project administrator. Public visitors cannot access the protected admin APIs.</span></div>
+        <div id="adminMessage" class="role-status-message">Loading secure admin data…</div>
+        <div class="admin-grid">
+          <div class="admin-stat"><span class="stat-symbol coral">⌁</span><small>ALL REQUESTS</small><b id="totalRequests">—</b><span class="stat-foot">All submitted requests</span></div>
+          <div class="admin-stat"><span class="stat-symbol teal">◷</span><small>LAST 24 HOURS</small><b id="recentRequests">—</b><span class="stat-foot">Recently submitted</span></div>
+          <div class="admin-stat"><span class="stat-symbol amber">!</span><small>OPEN REQUESTS</small><b id="openRequests">—</b><span class="stat-foot">Awaiting a volunteer</span></div>
+          <div class="admin-stat"><span class="stat-symbol blue">♙</span><small>VOLUNTEERS</small><b id="volunteerTotal">—</b><span class="stat-foot">Volunteer profiles</span></div>
+        </div>
+        <section class="panel admin-section status-summary">
+          <div class="panel-heading"><div><span class="eyebrow muted">REQUEST MONITORING</span><h2>Response workflow</h2></div><span class="live-tag"><i></i> Live database summary</span></div>
+          <div class="workflow-summary">
+            <div><span class="workflow-dot open-dot"></span><small>Open</small><b id="statusOpen">—</b></div>
+            <div><span class="workflow-dot accepted-dot"></span><small>Accepted</small><b id="statusAccepted">—</b></div>
+            <div><span class="workflow-dot progress-dot"></span><small>In progress</small><b id="statusProgress">—</b></div>
+            <div><span class="workflow-dot complete-dot"></span><small>Completed</small><b id="statusCompleted">—</b></div>
+          </div>
+        </section>
+      </section>
+
+      <section id="permissions" class="panel admin-section permissions-section" hidden>
+        <div class="panel-heading"><div><span class="eyebrow muted">OWNER ONLY</span><h2>User &amp; admin permissions</h2><p class="panel-description">Only the application owner can grant or remove admin access. Users must register and sign in to DisasterGuard before they can be promoted.</p></div><span class="section-count">Owner controls</span></div>
+        <div class="workspace-notice"><b>Restricted control</b><span>Admin users can operate the dashboard, but they cannot grant admin access to anyone else.</span></div>
+        <form id="addAdminForm" class="admin-permission-form"><label for="newAdminEmail">Registered user's email</label><div class="admin-permission-input"><input id="newAdminEmail" type="email" placeholder="user@example.com" autocomplete="email" required><button class="small-action" id="grantAdminButton" type="submit">Grant admin access</button></div><p class="permission-hint" id="permissionMessage" role="status">Only an existing DisasterGuard account can be promoted.</p></form>
+        <div id="adminUsersList" class="request-list"><div class="empty-state">Loading users and permissions…</div></div>
+      </section>
+
+      <section id="reports" class="panel admin-section analytics-section">
+        <div class="panel-heading"><div><span class="eyebrow muted">REPORTING</span><h2>Reports &amp; analytics</h2><p class="panel-description">Live breakdowns of emergency requests from your database. Export the available request records as a CSV file.</p></div><button class="small-action" id="exportReports">Export CSV ↓</button></div>
+        <div class="analytics-grid">
+          <div class="analytics-card"><h3>Monthly request trend</h3><p>Requests received in the last 6 calendar months</p><div id="monthlyChart" class="bar-chart" role="img" aria-label="Monthly emergency request totals"><div class="empty-state">Loading trend…</div></div></div>
+          <div class="analytics-card"><h3>Request categories</h3><p>Distribution by emergency request type</p><div id="typeBreakdown" class="type-breakdown"><div class="empty-state">Loading categories…</div></div></div>
+        </div>
+        <div class="report-footnote" id="reportFootnote">Reports are generated from current emergency request records.</div>
+      </section>
+
+      <section id="requests" class="panel admin-section">
+        <div class="panel-heading"><div><span class="eyebrow muted">INCIDENT INTAKE</span><h2>Recent emergency requests</h2><p class="panel-description">The latest requests submitted by community members, with current workflow status.</p></div><span class="section-count" id="recentCount">Latest 12</span></div>
+        <div id="recentList" class="request-list"><div class="empty-state">Loading requests…</div></div>
+      </section>
+
+      <section id="volunteers" class="panel admin-section">
+        <div class="panel-heading"><div><span class="eyebrow muted">REVIEW QUEUE</span><h2>Volunteer verification</h2><p class="panel-description">Review volunteer profiles and approve eligibility before volunteers accept community requests.</p></div><span class="section-count" id="volunteerCountLabel">Verification</span></div>
+        <div id="volunteerList" class="request-list"><div class="empty-state">Loading volunteer profiles…</div></div>
+      </section>
+
+      <footer class="admin-footer"><a class="brand footer-brand" href="/"><span class="brand-mark">✚</span><span>Disaster<span class="brand-light">Guard</span><small>EMERGENCY RESPONSE NETWORK</small></span></a><span>Administrator access is protected by the platform.</span><span>© <span id="year"></span> DisasterGuard</span></footer>
+    </main>
+  </div>
+</div>
+<div class="sidebar-scrim" id="sidebarScrim"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="/admin.js" defer></script>
+</body>
+</html>
