@@ -1,0 +1,1 @@
+ALTER TABLE app_admins RENAME COLUMN user_id TO admin_user_id;
