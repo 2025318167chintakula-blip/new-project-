@@ -22,7 +22,7 @@ export default async function (req, res) {
   if (req.method === 'POST') {
     const email = String(req.body?.email || '').trim().toLowerCase();
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ error: 'Enter a valid email address.' });
-    if (email === '2025318167.chintakula@ug.sharda.ac.in') return res.status(400).json({ error: 'The application owner already has permanent admin access.' });
+    if (email === String(process.env.OWNER_EMAIL || '').trim().toLowerCase()) return res.status(400).json({ error: 'The application owner already has permanent admin access.' });
     const user = await db.query('SELECT id, email, name FROM users WHERE LOWER(email) = $1 LIMIT 1', [email]);
     if (!user.rows[0]) return res.status(404).json({ error: 'No registered user has this email yet. Ask them to sign in to DisasterGuard first.' });
     await db.query('INSERT INTO app_admins (admin_user_id, granted_by) VALUES ($1, $2) ON CONFLICT (admin_user_id) DO NOTHING', [user.rows[0].id, req.user.id]);
